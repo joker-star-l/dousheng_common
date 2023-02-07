@@ -8,6 +8,7 @@ require (
 	github.com/hertz-contrib/jwt v1.0.2
 	github.com/nacos-group/nacos-sdk-go v1.1.4
 	go.uber.org/zap v1.24.0
+	gorm.io/gorm v1.24.5
 )
 
 require (
@@ -24,6 +25,8 @@ require (
 	github.com/golang/protobuf v1.5.0 // indirect
 	github.com/henrylee2cn/ameda v1.4.10 // indirect
 	github.com/henrylee2cn/goutil v0.0.0-20210127050712-89660552f6f8 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.4 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
