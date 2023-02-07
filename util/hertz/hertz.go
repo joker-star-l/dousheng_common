@@ -17,11 +17,14 @@ func InitServer(port int) *server.Hertz {
 	h := server.New(server.WithHostPorts(":" + strconv.Itoa(port)))
 	// 请求信息
 	h.Use(func(c context.Context, ctx *app.RequestContext) {
-		log.Slog.Infof("request: %v", ctx.URI())
+		start := time.Now()
+		ctx.Next(c)
+		latency := time.Now().Sub(start)
+		log.Slog.Infof("cost: %v, request: %v", latency, ctx.URI())
 	})
 	// 全局 panic 处理
 	h.Use(recovery.Recovery(recovery.WithRecoveryHandler(func(c context.Context, ctx *app.RequestContext, err interface{}, stack []byte) {
-		log.Slog.Errorf("%v, [Recovery] err=%v\nstack=%s", c, err, stack)
+		log.Slog.Errorf("Recovery, err: %v\nstack: %s", err, stack)
 		ctx.JSON(consts.StatusInternalServerError, common.ErrorResponse("系统错误"))
 	})))
 	return h
