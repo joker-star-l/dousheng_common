@@ -22,10 +22,10 @@ var Middleware *jwt.HertzJWTMiddleware
 func init() {
 	var err error
 	Middleware, err = jwt.New(&jwt.HertzJWTMiddleware{
-		Realm:                       "service_demo",
-		Key:                         []byte("service_demo_key"),
-		Timeout:                     time.Hour,
-		MaxRefresh:                  time.Hour * 24 * 7,
+		Realm:   "service_demo",
+		Key:     []byte("service_demo_key"),
+		Timeout: time.Hour * 24 * 7,
+		//MaxRefresh:                  time.Hour * 24 * 7,
 		TokenLookup:                 fmt.Sprintf("header: %s, query: %s, param: %s, form: %s", KeyToken, KeyToken, KeyToken, KeyToken),
 		WithoutDefaultTokenHeadName: true,
 		// 向 token 中添加信息
