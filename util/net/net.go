@@ -3,6 +3,7 @@ package util_net
 import (
 	"github.com/joker-star-l/dousheng_common/config/log"
 	"net"
+	"os"
 	"strconv"
 )
 
@@ -16,20 +17,13 @@ func IpFromStr(ip string, port int) net.Addr {
 }
 
 func LocalIp() string {
-	addr, err := net.InterfaceAddrs()
-	if err != nil {
-		log.Slog.Errorln(err)
-		return ""
-	}
+	host, _ := os.Hostname()
+	addr, _ := net.LookupIP(host)
 	for _, addr := range addr {
-		ipNet, isIpNet := addr.(*net.IPNet)
-		if isIpNet && !ipNet.IP.IsLoopback() {
-			ipv4 := ipNet.IP.To4()
-			if ipv4 != nil {
-				return ipv4.String()
-			}
+		if ipv4 := addr.To4(); ipv4 != nil {
+			return ipv4.String()
 		}
 	}
 	log.Slog.Errorln("not found ipv4 address")
-	return ""
+	return "127.0.0.1"
 }

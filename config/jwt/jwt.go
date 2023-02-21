@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/hertz-contrib/jwt"
 	"github.com/joker-star-l/dousheng_common/config/log"
 	common "github.com/joker-star-l/dousheng_common/entity"
 	util_json "github.com/joker-star-l/dousheng_common/util/json"
+	"strconv"
 	"time"
 )
 
@@ -44,11 +46,26 @@ func init() {
 		},
 		// 认证失败
 		Unauthorized: func(ctx context.Context, c *app.RequestContext, code int, message string) {
-			log.Slog.Errorf("auth error: %v", message)
-			c.JSON(code, common.ErrorResponse("认证失败"))
+			log.Slog.Infof("auth error: %v", message)
+			c.JSON(consts.StatusOK, common.ErrorResponse("未登录"))
 		},
 	})
 	if err != nil {
 		log.Slog.Panicf("HertzJWTMiddleware init error: %v", err.Error())
 	}
+}
+
+func ParseAndGetUserId(c context.Context, ctx *app.RequestContext) int64 {
+	userId := int64(0)
+	claims, err := Middleware.GetClaimsFromJWT(c, ctx)
+	if err == nil && claims != nil {
+		userId, _ = strconv.ParseInt(claims[KeyData].(map[string]any)["id"].(string), 10, 0)
+	}
+	return userId
+}
+
+func GetUserId(ctx *app.RequestContext) int64 {
+	tokenUser, _ := ctx.Get(KeyIdentity)
+	userId, _ := strconv.ParseInt(tokenUser.(map[string]any)["id"].(string), 10, 0)
+	return userId
 }

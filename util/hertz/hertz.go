@@ -14,7 +14,10 @@ import (
 )
 
 func InitServer(port int) *server.Hertz {
-	h := server.New(server.WithHostPorts(":" + strconv.Itoa(port)))
+	h := server.New(
+		server.WithHostPorts(":"+strconv.Itoa(port)),
+		server.WithMaxRequestBodySize(1024*1024*1024),
+	)
 	// 请求信息
 	h.Use(func(c context.Context, ctx *app.RequestContext) {
 		start := time.Now()
